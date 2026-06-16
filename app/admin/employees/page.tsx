@@ -29,7 +29,7 @@ const [password, setPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] =
     useState<Employee | null>(null);
-    // ඔබේ අනෙක් useState පවතින තැනට මෙය එක් කරන්න
+  
 const [role, setRole] = useState("OIC");
 
   // Form Input States
@@ -75,7 +75,7 @@ const [role, setRole] = useState("OIC");
   }, []);
 
  
- // openAddModal එකට මෙය එක් කරන්න
+ 
 const openAddModal = () => {
   setEditingEmployee(null);
   setEmpNo("");
@@ -85,12 +85,12 @@ const openAddModal = () => {
   setEmail("");
   setPassword("");
   setDepartment("Security");
-  setRole("OIC"); // මෙය අනිවාර්යයි
+  setRole("OIC"); 
   setStatus("Active");
   setIsModalOpen(true);
 };
 
-// openEditModal එකට මෙය එක් කරන්න
+
 const openEditModal = (employee: Employee) => {
   setEditingEmployee(employee);
   setEmpNo(employee.empNo);
@@ -100,7 +100,7 @@ const openEditModal = (employee: Employee) => {
   setEmail(employee.email);
   setPassword("");
   setDepartment(employee.department);
-  setRole(employee.role || "OIC"); // Employee ගේ role එක පෙන්වන්න
+  setRole(employee.role || "OIC"); 
   setStatus(employee.status);
   setIsModalOpen(true);
 };
@@ -564,7 +564,7 @@ const openEditModal = (employee: Employee) => {
     onChange={(e) => {
       const selectedDept = e.target.value as keyof typeof departmentStructure;
       setDepartment(selectedDept);
-      // දෙපාර්තමේන්තුව මාරු වූ වහාම, ඒ දෙපාර්තමේන්තුවේ මුල්ම role එක ස්වයංක්‍රීයව තෝරන්න
+      
       setRole(departmentStructure[selectedDept][0]); 
     }}
     className="w-full border rounded-lg px-3 py-2"

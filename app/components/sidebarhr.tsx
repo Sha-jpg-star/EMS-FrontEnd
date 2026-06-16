@@ -6,10 +6,10 @@ import {
   FileSpreadsheet, 
   Calendar, 
   Wallet, 
-  Award, 
   UserMinus,
   Building2,
-  Database
+  FileDown
+  
 } from 'lucide-react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -43,7 +43,8 @@ export default function HRSidebar() {
           <li><Link href="/hr/Attendancehr" className={linkClass("/hr/Attendancehr")}><FileSpreadsheet size={18} /> Attendance</Link></li>
           <li><Link href="/hr/Leaves" className={linkClass("/hr/Leaves")}><Calendar size={18} /> Leave Requests</Link></li>
           <li><Link href="/hr/payroll" className={linkClass("/hr/payroll")}><Wallet size={18} /> Payroll & Payslips</Link></li>
-          
+          <li><Link href="/hr/reports" className={linkClass("/hr/reports")}><FileDown size={18} /> Reports</Link></li>
+  
           <li><Link href="/hr/resignation" className={linkClass("/hr/resignation")}><UserMinus size={18} /> Resignation</Link></li>
           
           

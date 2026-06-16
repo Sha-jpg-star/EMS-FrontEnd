@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, Users, Calendar, CreditCard, Building2,CalendarDays, } from "lucide-react";
+import { LayoutDashboard, Users, Calendar, CreditCard, Building2,CalendarDays,Phone } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -57,7 +57,7 @@ export default function Sidebar() {
         </li>
 
         <li>
-          <Link href="/employee/applyLeaves" className={linkClass("/employee/applyLeaves")}>
+          <Link href="/employee/EmployeeLeaves" className={linkClass("/employee/EmployeeLeaves")}>
             <CalendarDays size={18}/>Apply Leave
           </Link>
         </li>
@@ -68,6 +68,11 @@ export default function Sidebar() {
           </Link>
         </li>
        
+       <li>
+          <Link href="/employee/Contactinfo" className={linkClass("/employee/Contactinfo")}>
+            <Phone size={18}/>Contact information
+          </Link>
+        </li>
 
        
 

@@ -2,7 +2,7 @@
 
 import { 
   LayoutDashboard, Users, Building2,  Database, Sliders,
-  FileSpreadsheet, Calendar, Wallet, Award, UserMinus 
+  FileSpreadsheet, Calendar, Wallet, UserMinus ,FileDown
 } from 'lucide-react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -35,8 +35,11 @@ export default function Sidebar() {
        
           
           <li><Link href="/admin/Leaves" className={linkClass("/admin/Leaves")}><Calendar size={18} /> Leave Requests</Link></li>
+          <li><Link href="/admin/Attendanceadmin" className={linkClass("/admin/Attendanceadmin")}>< FileSpreadsheet size={18} /> Attendance</Link></li>
           <li><Link href="/admin/payroll" className={linkClass("/admin/payroll")}><Wallet size={18} /> Payroll & Payslips</Link></li>
-          <li><Link href="/admin/performance" className={linkClass("/admin/performance")}><Award size={18} /> Performance</Link></li>
+          <li><Link href="/admin/reports" className={linkClass("/admin/reports")}><FileDown size={18} /> Reports</Link></li>
+
+         
           <li><Link href="/admin/resignation" className={linkClass("/admin/resignation")}><UserMinus size={18} /> Resignation</Link></li>
           
           
