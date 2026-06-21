@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Sidebar from "@/app/components/sidebaradmin";
 import Navbar from "@/app/components/navbar";
 
-// API 
 const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 const api = {
@@ -25,26 +24,24 @@ const api = {
   },
 };
 
-//  CONSTANTS
 const DEPARTMENTS = ["Cleaning", "Security", "Non-Academic", "Academic"];
 const fmt = (n) => `Rs. ${Number(n || 0).toLocaleString("en-LK")}`;
 
-// PAYSLIP VIEW MODAL (read-only) 
-function PayslipModal({ payroll, onClose }) {
+// PAYSLIP VIEW MODAL (read-only) — monthLabel now passed as a prop, not read from payroll record
+function PayslipModal({ payroll, monthLabel, onClose }) {
   if (!payroll) return null;
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
 
-        {/* Header */}
         <div className="bg-[#0f172a] px-6 py-5 rounded-t-2xl">
           <div className="flex items-start justify-between mb-4">
             <div>
               <p className="text-xs text-slate-400 font-medium uppercase tracking-wider mb-1">Payslip</p>
               <h2 className="text-xl font-bold text-white">{payroll.name}</h2>
               <p className="text-slate-400 text-xs mt-1">
-                Emp #{payroll.empNo} · {payroll.department} Department · {payroll.monthLabel}
+                Emp #{payroll.empNo} · {payroll.role} · {payroll.department} Department · {monthLabel}
               </p>
             </div>
             <button
@@ -55,7 +52,6 @@ function PayslipModal({ payroll, onClose }) {
             </button>
           </div>
 
-          {/* Attendance stats */}
           <div className="grid grid-cols-4 gap-2">
             {[
               { label: "Work Days", value: payroll.workDays,    color: "text-white" },
@@ -71,9 +67,7 @@ function PayslipModal({ payroll, onClose }) {
           </div>
         </div>
 
-        {/* Body */}
         <div className="px-6 py-5 space-y-5">
-          {/* Earnings */}
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Earnings</p>
             <div className="space-y-2">
@@ -95,7 +89,6 @@ function PayslipModal({ payroll, onClose }) {
             </div>
           </div>
 
-          {/* Deductions */}
           <div>
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Deductions</p>
             <div className="space-y-2">
@@ -117,14 +110,12 @@ function PayslipModal({ payroll, onClose }) {
             </div>
           </div>
 
-          {/* Net Pay */}
           <div className="bg-[#0f172a] rounded-2xl px-5 py-4 flex items-center justify-between">
             <span className="text-white font-semibold">Net Pay</span>
             <span className="text-green-400 text-2xl font-bold">{fmt(payroll.netPay)}</span>
           </div>
         </div>
 
-        {/* Footer */}
         <div className="px-6 pb-6">
           <button
             onClick={onClose}
@@ -138,7 +129,6 @@ function PayslipModal({ payroll, onClose }) {
   );
 }
 
-// MAIN PAGE 
 export default function AdminPayrollPage() {
   const [months, setMonths]               = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -148,7 +138,6 @@ export default function AdminPayrollPage() {
   const [loading, setLoading]             = useState(false);
   const [viewPayslip, setViewPayslip]     = useState(null);
 
-  // Load months on mount
   useEffect(() => {
     api.getAllMonths().then((data) => {
       const arr = Array.isArray(data) ? data : [];
@@ -157,7 +146,6 @@ export default function AdminPayrollPage() {
     });
   }, []);
 
-  // Load dept status when month changes
   useEffect(() => {
     if (selectedMonth) {
       api.getDepartmentStatus(selectedMonth).then((d) =>
@@ -166,7 +154,6 @@ export default function AdminPayrollPage() {
     }
   }, [selectedMonth]);
 
-  // Load payroll when filters change
   useEffect(() => {
     if (!selectedMonth) return;
     setLoading(true);
@@ -179,7 +166,6 @@ export default function AdminPayrollPage() {
 
   const currentLabel = months.find((m) => m.month === selectedMonth)?.label || "";
 
-  // Summary stats
   const totalGross  = payrolls.reduce((s, p) => s + (p.grossSalary     || 0), 0);
   const totalDed    = payrolls.reduce((s, p) => s + (p.totalDeductions  || 0), 0);
   const totalNet    = payrolls.reduce((s, p) => s + (p.netPay           || 0), 0);
@@ -187,14 +173,13 @@ export default function AdminPayrollPage() {
 
   return (
     <div className="flex h-screen bg-slate-900 text-slate-100 overflow-hidden w-full">
-              <Sidebar />
-              <div className="flex-1 flex flex-col overflow-hidden">
-                <Navbar />
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Navbar />
 
         <main className="flex-1 overflow-y-auto ">
           <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
 
-            {/* Page title + filters */}
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold text-white">Payroll Overview</h1>
@@ -225,7 +210,6 @@ export default function AdminPayrollPage() {
               </div>
             </div>
 
-            {/* ── Summary Stats ─────────────────────────────────────────── */}
             {payrolls.length > 0 && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {[
@@ -242,7 +226,6 @@ export default function AdminPayrollPage() {
               </div>
             )}
 
-            {/*  Department Status Cards */}
             {selectedMonth && deptStatus.length > 0 && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 {DEPARTMENTS.map((dept) => {
@@ -275,9 +258,7 @@ export default function AdminPayrollPage() {
               </div>
             )}
 
-            {/*  Payroll Table  */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              {/* Table header bar */}
               <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div>
                   <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
@@ -301,7 +282,6 @@ export default function AdminPayrollPage() {
                 )}
               </div>
 
-              {/* Table */}
               {payrolls.length > 0 && !loading && (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -310,6 +290,7 @@ export default function AdminPayrollPage() {
                         <th className="text-left px-5 py-3">Emp No</th>
                         <th className="text-left px-5 py-3">Name</th>
                         <th className="text-left px-5 py-3">Department</th>
+                        <th className="text-left px-5 py-3">Role</th>
                         <th className="text-center px-5 py-3">Attendance</th>
                         <th className="text-center px-5 py-3">Late</th>
                         <th className="text-right px-5 py-3">Basic</th>
@@ -327,6 +308,11 @@ export default function AdminPayrollPage() {
                           <td className="px-5 py-3.5">
                             <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-lg font-medium">
                               {p.department}
+                            </span>
+                          </td>
+                          <td className="px-5 py-3.5">
+                            <span className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-lg font-medium border border-blue-100 whitespace-nowrap">
+                              {p.role}
                             </span>
                           </td>
                           <td className="px-5 py-3.5 text-center text-slate-500">
@@ -368,10 +354,9 @@ export default function AdminPayrollPage() {
                       ))}
                     </tbody>
 
-                    {/* Totals row */}
                     <tfoot>
                       <tr className="border-t-2 border-slate-200 bg-slate-50">
-                        <td colSpan={5} className="px-5 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                        <td colSpan={6} className="px-5 py-3 text-xs font-semibold text-slate-600 uppercase tracking-wider">
                           Total · {payrolls.length} employees
                         </td>
                         <td className="px-5 py-3 text-right text-xs font-semibold text-slate-700">—</td>
@@ -391,7 +376,6 @@ export default function AdminPayrollPage() {
                 </div>
               )}
 
-              {/* Loading */}
               {loading && (
                 <div className="py-12 text-center">
                   <svg className="animate-spin w-6 h-6 text-slate-400 mx-auto" fill="none" viewBox="0 0 24 24">
@@ -402,7 +386,6 @@ export default function AdminPayrollPage() {
                 </div>
               )}
 
-              {/* Empty */}
               {!loading && selectedMonth && payrolls.length === 0 && (
                 <div className="py-14 text-center">
                   <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3">
@@ -429,9 +412,9 @@ export default function AdminPayrollPage() {
         </main>
       </div>
 
-      {/* Payslip Modal (view only) */}
       <PayslipModal
         payroll={viewPayslip}
+        monthLabel={currentLabel}
         onClose={() => setViewPayslip(null)}
       />
     </div>

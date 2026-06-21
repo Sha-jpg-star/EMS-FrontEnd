@@ -281,52 +281,44 @@ export default function AttendancePage() {
                     </p>
                   </div>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-100 bg-white">
-                          {["Emp No", "Name", "Work Days", "Present", "Absent", "Late (min)", "Basic Salary", "Action"].map((h) => (
-                            <th key={h} className={`px-5 py-3 ${h === "Emp No" || h === "Name" ? "text-left" : "text-center"}`}>{h}</th>
-                          ))}
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-slate-100">
-                        {attendance.map((emp) => (
-                          <tr key={emp.empNo} className="hover:bg-slate-50 transition">
-                            <td className="px-5 py-3.5 font-semibold text-[#0f172a]">{emp.empNo}</td>
-                            <td className="px-5 py-3.5 text-slate-700 font-medium">{emp.name}</td>
-                            <td className="px-5 py-3.5 text-center text-slate-600">{emp.workDays}</td>
-                            <td className="px-5 py-3.5 text-center">
-                              <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 rounded-full bg-green-50 text-green-700 font-semibold text-xs">
-                                {emp.present}
-                              </span>
-                            </td>
-                            <td className="px-5 py-3.5 text-center">
-                              <span className={`inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 rounded-full font-semibold text-xs ${emp.absent > 0 ? "bg-red-50 text-red-600" : "bg-slate-100 text-slate-400"}`}>
-                                {emp.absent}
-                              </span>
-                            </td>
-                            <td className="px-5 py-3.5 text-center">
-                              <span className={`text-xs font-medium ${emp.lateMinutes > 0 ? "text-amber-600" : "text-slate-400"}`}>
-                                {emp.lateMinutes} min
-                              </span>
-                            </td>
-                            <td className="px-5 py-3.5 text-center text-slate-700 text-xs font-medium">
-                              Rs. {Number(emp.basicSalary || 0).toLocaleString("en-LK")}
-                            </td>
-                            <td className="px-5 py-3.5 text-center">
-                              <button onClick={() => setSalaryModal(emp)}
-                                className="inline-flex items-center gap-1.5 text-xs border border-slate-200 text-slate-600 px-3 py-1.5 rounded-lg hover:bg-[#0f172a] hover:text-white hover:border-[#0f172a] transition">
-                                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                    d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                </svg>
-                                Set Salary
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                   <table className="w-full text-sm">
+  <thead>
+    <tr className="text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-100 bg-white">
+      {["Emp No", "Name", "Department", "Role", "Work Days", "Present", "Absent", "Late (min)", "Basic Salary"].map((h) => (
+        <th key={h} className={`px-5 py-3 ${h === "Emp No" || h === "Name" || h === "Department" || h === "Role" ? "text-left" : "text-center"}`}>{h}</th>
+      ))}
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-slate-100">
+    {attendance.map((emp) => (
+      <tr key={emp.empNo} className="hover:bg-slate-50 transition">
+        <td className="px-5 py-3.5 font-semibold text-[#0f172a]">{emp.empNo}</td>
+        <td className="px-5 py-3.5 text-slate-700 font-medium">{emp.name}</td>
+        <td className="px-5 py-3.5 text-slate-600">{emp.department}</td>
+        <td className="px-5 py-3.5 text-slate-600">{emp.role || "—"}</td>
+        <td className="px-5 py-3.5 text-center text-slate-600">{emp.workDays}</td>
+        <td className="px-5 py-3.5 text-center">
+          <span className="inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 rounded-full bg-green-50 text-green-700 font-semibold text-xs">
+            {emp.present}
+          </span>
+        </td>
+        <td className="px-5 py-3.5 text-center">
+          <span className={`inline-flex items-center justify-center min-w-[2rem] px-2 py-0.5 rounded-full font-semibold text-xs ${emp.absent > 0 ? "bg-red-50 text-red-600" : "bg-slate-100 text-slate-400"}`}>
+            {emp.absent}
+          </span>
+        </td>
+        <td className="px-5 py-3.5 text-center">
+          <span className={`text-xs font-medium ${emp.lateMinutes > 0 ? "text-amber-600" : "text-slate-400"}`}>
+            {emp.lateMinutes} min
+          </span>
+        </td>
+        <td className="px-5 py-3.5 text-center text-slate-700 text-xs font-medium">
+          Rs. {Number(emp.basicSalary || 0).toLocaleString("en-LK")}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
                   </div>
                 </>
               )}

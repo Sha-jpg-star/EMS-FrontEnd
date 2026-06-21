@@ -9,6 +9,7 @@ export default function MyAttendancePage() {
   const [empNo, setEmpNo] = useState("");
   const [employeeName, setEmployeeName] = useState("");
   const [employeeDept, setEmployeeDept] = useState("");
+  const [employeeRole, setEmployeeRole] = useState("");
   const [records, setRecords] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,7 +22,6 @@ export default function MyAttendancePage() {
       return;
     }
 
-    // Get employee details by email (same as profile page)
     fetch(`${BASE}/employee/by-email/${user.email}`)
       .then((res) => res.json())
       .then((data) => {
@@ -34,8 +34,8 @@ export default function MyAttendancePage() {
         setEmpNo(data.empNo);
         setEmployeeName(data.name || "");
         setEmployeeDept(data.department || "");
+        setEmployeeRole(data.role || "");
 
-        // Now fetch attendance for this empNo
         return fetch(`${BASE}/attendance?empNo=${data.empNo}`);
       })
       .then((res) => res?.json())
@@ -66,7 +66,6 @@ export default function MyAttendancePage() {
         <main className="flex-1 overflow-y-auto bg-slate-950">
           <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
 
-            {/* Page Title */}
             <div>
               <h1 className="text-2xl font-bold text-white">My Attendance</h1>
               <p className="text-sm text-slate-500 mt-1">
@@ -74,7 +73,6 @@ export default function MyAttendancePage() {
               </p>
             </div>
 
-            {/* Loading */}
             {loading && (
               <div className="py-20 text-center">
                 <svg className="animate-spin w-7 h-7 text-blue-500 mx-auto" fill="none" viewBox="0 0 24 24">
@@ -85,7 +83,6 @@ export default function MyAttendancePage() {
               </div>
             )}
 
-            {/* Error */}
             {!loading && error && (
               <div className="flex items-center gap-3 px-5 py-4 bg-red-950 border border-red-800 rounded-2xl text-red-400 text-sm">
                 <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,11 +103,17 @@ export default function MyAttendancePage() {
                     </div>
                     <div>
                       <h2 className="text-base font-semibold text-white">{employeeName}</h2>
-                      <p className="text-sm text-slate-400">{employeeDept} · Emp #{empNo}</p>
+                      <p className="text-sm text-slate-400 flex items-center gap-2 flex-wrap">
+                        <span>{employeeDept} · Emp #{empNo}</span>
+                        {employeeRole && (
+                          <span className="text-xs bg-blue-950 text-blue-400 px-2 py-0.5 rounded-full border border-blue-900">
+                            {employeeRole}
+                          </span>
+                        )}
+                      </p>
                     </div>
                   </div>
 
-                  {/* Summary Stats */}
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                     <div className="bg-slate-800 rounded-xl p-4 text-center">
                       <p className="text-2xl font-bold text-white">{totalWorkDays}</p>
@@ -143,8 +146,8 @@ export default function MyAttendancePage() {
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-800">
-                            {["Month", "Work Days", "Present", "Absent", "Late (min)"].map((h) => (
-                              <th key={h} className={`px-5 py-3 ${h === "Month" ? "text-left" : "text-center"}`}>
+                            {["Month", "Role", "Work Days", "Present", "Absent", "Late (min)"].map((h) => (
+                              <th key={h} className={`px-5 py-3 ${h === "Month" || h === "Role" ? "text-left" : "text-center"}`}>
                                 {h}
                               </th>
                             ))}
@@ -155,6 +158,11 @@ export default function MyAttendancePage() {
                             <tr key={rec.month} className="hover:bg-slate-800/50 transition">
                               <td className="px-5 py-3.5 font-medium text-white">
                                 {rec.monthLabel || rec.month}
+                              </td>
+                              <td className="px-5 py-3.5">
+                                <span className="text-xs bg-blue-950 text-blue-400 px-2 py-1 rounded-lg border border-blue-900">
+                                  {rec.role || "—"}
+                                </span>
                               </td>
                               <td className="px-5 py-3.5 text-center text-slate-400">{rec.workDays}</td>
                               <td className="px-5 py-3.5 text-center">
@@ -185,7 +193,6 @@ export default function MyAttendancePage() {
                     </div>
                   </div>
                 ) : (
-                  /* No records */
                   <div className="bg-slate-900 rounded-2xl border border-slate-800 py-16 text-center">
                     <div className="w-14 h-14 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-4">
                       <svg className="w-7 h-7 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

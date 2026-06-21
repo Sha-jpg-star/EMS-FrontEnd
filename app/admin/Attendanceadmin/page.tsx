@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Sidebar from "@/app/components/sidebaradmin";
 import Navbar from "@/app/components/navbar";
 
-
 const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
 const api = {
@@ -20,9 +19,7 @@ const api = {
   },
 };
 
-
 const DEPARTMENTS = ["Cleaning", "Security", "Non-Academic", "Academic"];
-
 
 function StatCard({ label, value, color }) {
   return (
@@ -33,7 +30,6 @@ function StatCard({ label, value, color }) {
   );
 }
 
-// MAIN PAGE 
 export default function AdminAttendancePage() {
   const [months, setMonths]               = useState([]);
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -41,7 +37,6 @@ export default function AdminAttendancePage() {
   const [attendance, setAttendance]       = useState([]);
   const [loading, setLoading]             = useState(false);
 
-  // Load all available months on mount
   useEffect(() => {
     api.getAllMonths().then((data) => {
       const arr = Array.isArray(data) ? data : [];
@@ -50,7 +45,6 @@ export default function AdminAttendancePage() {
     });
   }, []);
 
-  // Load attendance when filters change
   useEffect(() => {
     if (!selectedMonth) return;
     setLoading(true);
@@ -63,13 +57,11 @@ export default function AdminAttendancePage() {
 
   const currentLabel = months.find((m) => m.month === selectedMonth)?.label || "";
 
-  // Summary stats
   const totalEmp     = attendance.length;
   const totalPresent = attendance.reduce((s, e) => s + (e.present || 0), 0);
   const totalAbsent  = attendance.reduce((s, e) => s + (e.absent || 0), 0);
   const totalLate    = attendance.reduce((s, e) => s + (e.lateMinutes || 0), 0);
 
-  // Group by department for dept summary
   const deptSummary = DEPARTMENTS.map((dept) => {
     const rows = attendance.filter((e) => e.department === dept);
     return {
@@ -83,20 +75,14 @@ export default function AdminAttendancePage() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-slate-900 text-slate-100">
-          
-          {/* Sidebar */}
-          <Sidebar />
-    
-          {/* Main Area */}
-          <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-            
-            {/* Navbar */}
-            <Navbar />
+      <Sidebar />
+
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <Navbar />
 
         <main className="flex-1 overflow-y-auto ">
           <div className="max-w-7xl mx-auto px-6 py-8 space-y-6">
 
-            {/* Page title */}
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <h1 className="text-2xl font-bold text-white">Attendance Overview</h1>
@@ -105,7 +91,6 @@ export default function AdminAttendancePage() {
                 </p>
               </div>
 
-              {/* Filters */}
               <div className="flex gap-2 flex-wrap">
                 <select
                   value={selectedMonth}
@@ -129,7 +114,6 @@ export default function AdminAttendancePage() {
               </div>
             </div>
 
-            {/*Summary Stat*/}
             {attendance.length > 0 && (
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                 <StatCard label="Total Employees"  value={totalEmp}     color="text-slate-800" />
@@ -139,7 +123,6 @@ export default function AdminAttendancePage() {
               </div>
             )}
 
-            {/*  Department Summary Cards */}
             {selectedDept === "All" && deptSummary.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 {deptSummary.map((d) => (
@@ -173,9 +156,7 @@ export default function AdminAttendancePage() {
               </div>
             )}
 
-            {/*Attendance Table  */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-              {/* Table header bar */}
               <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div>
                   <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
@@ -187,7 +168,6 @@ export default function AdminAttendancePage() {
                   )}
                 </div>
 
-                {/* Back to all button when filtered */}
                 {selectedDept !== "All" && (
                   <button
                     onClick={() => setSelectedDept("All")}
@@ -201,7 +181,6 @@ export default function AdminAttendancePage() {
                 )}
               </div>
 
-              {/* Table */}
               {attendance.length > 0 && !loading && (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
@@ -210,6 +189,7 @@ export default function AdminAttendancePage() {
                         <th className="text-left px-5 py-3">Emp No</th>
                         <th className="text-left px-5 py-3">Name</th>
                         <th className="text-left px-5 py-3">Department</th>
+                        <th className="text-left px-5 py-3">Role</th>
                         <th className="text-center px-5 py-3">Work Days</th>
                         <th className="text-center px-5 py-3">Present</th>
                         <th className="text-center px-5 py-3">Absent</th>
@@ -229,6 +209,11 @@ export default function AdminAttendancePage() {
                             <td className="px-5 py-3.5">
                               <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1 rounded-lg font-medium">
                                 {emp.department}
+                              </span>
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <span className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-lg font-medium border border-blue-100">
+                                {emp.role || "—"}
                               </span>
                             </td>
                             <td className="px-5 py-3.5 text-center text-slate-600">{emp.workDays}</td>
@@ -270,7 +255,6 @@ export default function AdminAttendancePage() {
                 </div>
               )}
 
-              {/* Loading */}
               {loading && (
                 <div className="py-12 text-center">
                   <svg className="animate-spin w-6 h-6 text-slate-400 mx-auto" fill="none" viewBox="0 0 24 24">
@@ -281,7 +265,6 @@ export default function AdminAttendancePage() {
                 </div>
               )}
 
-              {/* Empty */}
               {!loading && selectedMonth && attendance.length === 0 && (
                 <div className="py-14 text-center">
                   <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-3">
